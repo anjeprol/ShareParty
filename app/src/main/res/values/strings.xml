@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Share Party</string>
+    <string name="title_activity_main">Party List</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_logout">Logout</string>
+    <string name="et_password">Password</string>
+    <string name="tv_password">Password</string>
+    <string name="et_email">Email</string>
+    <string name="tv_user">User</string>
+    <string name="lb_btn_register">Register</string>
+    <string name="lb_reset_password">Reset password</string>
+    <string name="lb_btn_login">I\'m already registered, Login Me!</string>
+    <string name="lb_btn_login_short">Login</string>
+    <string name="str_register_fail">Register Failed</string>
+    <string name="title_activity_login">LoginActivity</string>
+</resources>

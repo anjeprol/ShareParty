@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "464885044528",
+    "firebase_url": "https://partylist-ac72d.firebaseio.com",
+    "project_id": "partylist-ac72d",
+    "storage_bucket": "partylist-ac72d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464885044528:android:8783019cf9b52246",
+        "android_client_info": {
+          "package_name": "com.prolan.partylist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464885044528-90fenq6foark09pqu8m3tfveoiute3sc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAc_EhwbvEFsfafVBIssjyEt5hjzei9Pb0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
