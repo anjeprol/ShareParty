@@ -40,17 +40,17 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        btn_login = (Button) findViewById(R.id.btn_login);
-        btn_singUp = (Button) findViewById(R.id.btn_signup);
-        btn_resetPassword = (Button) findViewById(R.id.btn_reset_password);
+        btn_login          = (Button) findViewById(R.id.btn_login);
+        btn_singUp         = (Button) findViewById(R.id.btn_signup);
+        btn_resetPassword  = (Button) findViewById(R.id.btn_reset_password);
 
-        til_email = (TextInputLayout) findViewById(R.id.til_email);
-        til_password = (TextInputLayout) findViewById(R.id.til_password);
+        til_email          = (TextInputLayout) findViewById(R.id.til_email);
+        til_password       = (TextInputLayout) findViewById(R.id.til_password);
 
 
-        inputEmail = (EditText) findViewById(R.id.etEmail);
-        inputPassword = (EditText) findViewById(R.id.etPassword);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        inputEmail         = (EditText) findViewById(R.id.etEmail);
+        inputPassword      = (EditText) findViewById(R.id.etPassword);
+        progressBar        = (ProgressBar) findViewById(R.id.progressBar);
 
         btn_singUp.setOnClickListener(new View.OnClickListener() {
             @Override
