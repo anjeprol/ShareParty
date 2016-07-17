@@ -1,10 +1,12 @@
 package com.prolan.partylist.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,10 +27,10 @@ import com.prolan.partylist.utils.Constants;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FirebaseAuth auth ;
     private TextView mTextViewEmail;
     private TextView mTextUserName;
     private Intent mInten;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +39,23 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mInten          = getIntent();
+        mInten = getIntent();
 
         // Getting the views from nav_bar
         NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
-        View header=mNavigationView.getHeaderView(0);
+        View header = mNavigationView.getHeaderView(0);
 
         mTextViewEmail = (TextView) header.findViewById(R.id.nav_tv_email);
-        mTextUserName  = (TextView) header.findViewById(R.id.nav_tv_userName);
+        mTextUserName = (TextView) header.findViewById(R.id.nav_tv_userName);
 
-        if(!mInten.getStringExtra(Constants.EMAIL).isEmpty())
+        if (!mInten.getStringExtra(Constants.EMAIL).isEmpty())
             mTextViewEmail.setText(mInten.getStringExtra(Constants.EMAIL));
         else
             mTextViewEmail.setText(Constants.NO_EMAIL);
-        if(mInten.getStringExtra(Constants.USER_NAME) != null){
+        if (mInten.getStringExtra(Constants.USER_NAME) != null) {
             mTextUserName.setText(mInten.getStringExtra(Constants.USER_NAME));
         }
-
-
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -105,7 +105,24 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_LONG).show();
+
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.title_logout)
+                    .setMessage(R.string.message_logout)
+                    .setNegativeButton(R.string.opt_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //No actions for now
+                            return;
+                        }
+                    })
+                    .setPositiveButton(R.string.opt_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            singOut();
+                        }
+                    })
+                    .show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -136,7 +153,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
-
-
+    private void singOut() {
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            auth.signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+    }
 }

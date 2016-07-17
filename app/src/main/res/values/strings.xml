@@ -18,4 +18,8 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="user_name">No name to show</string>
     <string name="email_sample_com">email@sample.com</string>
+    <string name="title_logout">Logout</string>
+    <string name="message_logout">Are you sure you want to sing out?</string>
+    <string name="opt_no">no</string>
+    <string name="opt_yes">si</string>
 </resources>
