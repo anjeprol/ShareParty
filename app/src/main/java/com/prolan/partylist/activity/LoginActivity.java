@@ -52,7 +52,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (auth.getCurrentUser() != null) {
             Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-            mIntent.putExtra(Constants.EMAIL,inputEmail.getText().toString());
+            mIntent.putExtra(Constants.USER_NAME,auth.getCurrentUser().getDisplayName());
+            mIntent.putExtra(Constants.EMAIL,auth.getCurrentUser().getEmail());
             startActivity(mIntent);
             finish();
         }

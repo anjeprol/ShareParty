@@ -25,9 +25,10 @@ import com.prolan.partylist.utils.Constants;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    FirebaseAuth auth ;
+    private FirebaseAuth auth ;
     private TextView mTextViewEmail;
-    Intent mInten;
+    private TextView mTextUserName;
+    private Intent mInten;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +45,16 @@ public class MainActivity extends AppCompatActivity
         View header=mNavigationView.getHeaderView(0);
 
         mTextViewEmail = (TextView) header.findViewById(R.id.nav_tv_email);
+        mTextUserName  = (TextView) header.findViewById(R.id.nav_tv_userName);
 
         if(!mInten.getStringExtra(Constants.EMAIL).isEmpty())
             mTextViewEmail.setText(mInten.getStringExtra(Constants.EMAIL));
         else
             mTextViewEmail.setText(Constants.NO_EMAIL);
+        if(mInten.getStringExtra(Constants.USER_NAME) != null){
+            mTextUserName.setText(mInten.getStringExtra(Constants.USER_NAME));
+        }
+
 
 
 
