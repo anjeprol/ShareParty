@@ -18,6 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.prolan.partylist.R;
+import com.prolan.partylist.utils.Constants;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -95,7 +96,9 @@ public class SignupActivity extends AppCompatActivity {
                         if(!task.isSuccessful()){
                             Toast.makeText(getApplicationContext(), R.string.str_register_fail,Toast.LENGTH_SHORT).show();
                         }else{
-                            startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                            Intent mIntent = new Intent(SignupActivity.this, MainActivity.class);
+                            mIntent.putExtra(Constants.EMAIL,inputEmail.getText().toString());
+                            startActivity(mIntent);
                             finish();
                         }
                     }

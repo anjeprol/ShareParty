@@ -14,16 +14,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.prolan.partylist.R;
+import com.prolan.partylist.utils.Constants;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseAuth auth ;
+    private TextView mTextViewEmail;
+    Intent mInten;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +36,27 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mInten          = getIntent();
+
+        // Getting the views from nav_bar
+        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        View header=mNavigationView.getHeaderView(0);
+
+        mTextViewEmail = (TextView) header.findViewById(R.id.nav_tv_email);
+
+        if(!mInten.getStringExtra(Constants.EMAIL).isEmpty())
+            mTextViewEmail.setText(mInten.getStringExtra(Constants.EMAIL));
+        else
+            mTextViewEmail.setText(Constants.NO_EMAIL);
+
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Sync...", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -79,7 +99,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            return true;
+            Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -110,15 +130,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void logout(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.action_logout) {
-       // auth.signOut();
-        startActivity(new Intent(MainActivity.this,LoginActivity.class));
-        Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_LONG).show();
-        finish();
-        }
-    }
+
+
 }

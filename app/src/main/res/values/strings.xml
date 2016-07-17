@@ -16,4 +16,6 @@
     <string name="lb_btn_login_short">Login</string>
     <string name="str_register_fail">Register Failed</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="user_name">user name</string>
+    <string name="email_sample_com">email@sample.com</string>
 </resources>

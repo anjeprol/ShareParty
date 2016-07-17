@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.prolan.partylist.R;
+import com.prolan.partylist.utils.Constants;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,10 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        }
+
 
         btn_login          = (Button) findViewById(R.id.btn_login);
         btn_singUp         = (Button) findViewById(R.id.btn_signup);
@@ -52,11 +50,17 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword      = (EditText) findViewById(R.id.etPassword);
         progressBar        = (ProgressBar) findViewById(R.id.progressBar);
 
+        if (auth.getCurrentUser() != null) {
+            Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
+            mIntent.putExtra(Constants.EMAIL,inputEmail.getText().toString());
+            startActivity(mIntent);
+            finish();
+        }
+
         btn_singUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LoginActivity.this,SignupActivity.class));
-                finish();
             }
         });
 
@@ -100,8 +104,9 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.str_register_fail), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
+                                    Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                    mIntent.putExtra(Constants.EMAIL, inputEmail.getText().toString());
+                                    startActivity(mIntent);
                                     finish();
                                 }
                             }
