@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity
             mTextUserName.setText(mInten.getStringExtra(Constants.USER_NAME));
         }
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
