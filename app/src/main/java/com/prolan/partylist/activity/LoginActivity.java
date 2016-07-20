@@ -22,11 +22,11 @@ import com.prolan.partylist.utils.Constants;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText inputEmail, inputPassword;
-    private Button btn_login, btn_singUp, btn_resetPassword;
+    private EditText        inputEmail, inputPassword;
+    private Button          btn_login, btn_singUp, btn_resetPassword;
     private TextInputLayout til_email, til_password;
-    private ProgressBar progressBar;
-    private FirebaseAuth auth;
+    private ProgressBar     progressBar;
+    private FirebaseAuth    auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

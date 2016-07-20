@@ -22,11 +22,11 @@ import com.prolan.partylist.utils.Constants;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText inputEmail, inputPassword;
-    private Button btn_login, btn_singUp, btn_resetPassword;
+    private EditText        inputEmail, inputPassword;
+    private Button          btn_login, btn_singUp, btn_resetPassword;
     private TextInputLayout til_email, til_password;
-    private ProgressBar progressBar;
-    private FirebaseAuth auth;
+    private ProgressBar     progressBar;
+    private FirebaseAuth    auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +36,17 @@ public class SignupActivity extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
-        btn_login = (Button) findViewById(R.id.btn_login);
-        btn_singUp = (Button) findViewById(R.id.btn_signup);
-        btn_resetPassword = (Button) findViewById(R.id.btn_reset_password);
+        btn_login           = (Button) findViewById(R.id.btn_login);
+        btn_singUp          = (Button) findViewById(R.id.btn_signup);
+        btn_resetPassword   = (Button) findViewById(R.id.btn_reset_password);
 
-        til_email = (TextInputLayout) findViewById(R.id.til_email);
-        til_password = (TextInputLayout) findViewById(R.id.til_password);
+        til_email       = (TextInputLayout) findViewById(R.id.til_email);
+        til_password    = (TextInputLayout) findViewById(R.id.til_password);
 
 
-        inputEmail = (EditText) findViewById(R.id.etEmail);
-        inputPassword = (EditText) findViewById(R.id.etPassword);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        inputEmail      = (EditText) findViewById(R.id.etEmail);
+        inputPassword   = (EditText) findViewById(R.id.etPassword);
+        progressBar     = (ProgressBar) findViewById(R.id.progressBar);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
