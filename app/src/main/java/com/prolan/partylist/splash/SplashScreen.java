@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 
 import com.prolan.partylist.R;
 import com.prolan.partylist.activity.LoginActivity;
-import com.prolan.partylist.activity.MainActivity;
 
 public class SplashScreen extends Activity {
     public void onAttachedToWindow() {
