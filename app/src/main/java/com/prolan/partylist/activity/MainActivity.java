@@ -26,11 +26,12 @@ import com.prolan.partylist.R;
 import com.prolan.partylist.utils.Constants;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private TextView    mEmailTextView;
-    private TextView    mUserNameTextView;
-    private Intent      mIntent;
+    private final static String ACTION = "Action";
+    private TextView mEmailTextView;
+    private TextView mUserNameTextView;
+    private Intent mIntent;
     private FirebaseAuth mFirebaseAuth;
 
     @Override
@@ -50,6 +51,23 @@ public class MainActivity extends AppCompatActivity
         mEmailTextView = (TextView) header.findViewById(R.id.nav_tv_email);
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_tv_userName);
 
+        setUsrPreferences();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    //Method to read the information that the user filled when was authenticating
+    private void setUsrPreferences() {
         if (!mIntent.getStringExtra(Constants.EMAIL).isEmpty())
         {
             mEmailTextView.setText(mIntent.getStringExtra(Constants.EMAIL));
@@ -62,32 +80,19 @@ public class MainActivity extends AppCompatActivity
         {
             mUserNameTextView.setText(mIntent.getStringExtra(Constants.USER_NAME));
         }
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar snack = Snackbar.make(view, "Syncing...", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null);
-                ViewGroup mViewGroup = (ViewGroup) snack.getView();
-                TextView mTextView = (TextView) mViewGroup.findViewById(android.support.design.R.id.snackbar_text);
-                mViewGroup.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                {
-                    mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                }
-                snack.show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+    //Method to show a custom snackbar
+    private void showSnackBar(View view) {
+        Snackbar snack = Snackbar.make(view, R.string.msg_sync, Snackbar.LENGTH_LONG).setAction(ACTION, null);
+        ViewGroup viewGroup = (ViewGroup) snack.getView();
+        TextView textView = (TextView) viewGroup.findViewById(android.support.design.R.id.snackbar_text);
+        viewGroup.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+        {
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        }
+        snack.show();
     }
 
     @Override
@@ -107,8 +112,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
-
         return true;
     }
 
@@ -117,31 +120,47 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout)
+        switch (item.getItemId())
         {
-
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.title_logout)
-                    .setMessage(R.string.message_logout)
-                    .setNegativeButton(R.string.opt_no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            //No actions for now
-                            return;
-                        }
-                    })
-                    .setPositiveButton(R.string.opt_yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            singOut();
-                        }
-                    })
-                    .show();
+            case R.id.action_logout:
+                logout();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //Method to implement the logout from UI
+    private void logout() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_logout)
+                .setMessage(R.string.message_logout)
+                .setNegativeButton(R.string.opt_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //No actions for now
+                        return;
+                    }
+                })
+                .setPositiveButton(R.string.opt_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        singOut();
+                    }
+                })
+                .show();
+    }
+
+    //Method to sing out from firebase
+    private void singOut() {
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        if (mFirebaseAuth.getCurrentUser() != null)
+        {
+            mFirebaseAuth.signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -169,13 +188,13 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void singOut() {
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        if (mFirebaseAuth.getCurrentUser() != null)
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
         {
-            mFirebaseAuth.signOut();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+            case R.id.fab:
+                showSnackBar(view);
+                break;
         }
     }
 }

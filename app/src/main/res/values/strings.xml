@@ -25,4 +25,5 @@
     <string name="err_msg_email">Enter email address!</string>
     <string name="err_msg_passwd">Enter password!</string>
     <string name="err_msg_length_passwd">Minimal length password is 6</string>
+    <string name="msg_sync">Syncing...</string>
 </resources>
