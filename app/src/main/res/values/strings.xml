@@ -28,6 +28,6 @@
     <string name="err_msg_length_passwd">Minimal length password is 6</string>
     <string name="msg_sync">Syncing...</string>
     <string name="btn_reset_password">Reset Password</string>
-    <string name="btn_back"><![CDATA[<< Back]]></string>
+    <string name="btn_back">Back</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
 </resources>
