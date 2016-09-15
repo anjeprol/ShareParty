@@ -65,6 +65,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 singUp();
                 break;
             case R.id.btn_reset_password:
+                startActivity(new Intent(SignupActivity.this, ResetPasswordActivity.class));
                 break;
         }
     }

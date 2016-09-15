@@ -11,6 +11,7 @@
     <string name="et_email">Email</string>
     <string name="tv_user">User</string>
     <string name="lb_btn_register">Register</string>
+    <string name="lb_forgot_password">Forgot password?</string>
     <string name="lb_reset_password">Reset password</string>
     <string name="lb_btn_login">I\'m already registered, Login Me!</string>
     <string name="lb_btn_login_short">Login</string>
@@ -26,4 +27,7 @@
     <string name="err_msg_passwd">Enter password!</string>
     <string name="err_msg_length_passwd">Minimal length password is 6</string>
     <string name="msg_sync">Syncing...</string>
+    <string name="btn_reset_password">Reset Password</string>
+    <string name="btn_back"><![CDATA[<< Back]]></string>
+    <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
 </resources>
