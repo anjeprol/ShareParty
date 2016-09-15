@@ -27,15 +27,15 @@ public class LoginActivity extends AppCompatActivity {
     private Button      mSingUpBtn;
     private Button      mResetPasswordBtn;
     private ProgressBar mProgressBar;
-    private FirebaseAuth auth;
+    private FirebaseAuth mFirebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //Get Firebase auth instance
-        auth                = FirebaseAuth.getInstance();
+        //Get Firebase mFirebaseAuth instance
+        mFirebaseAuth       = FirebaseAuth.getInstance();
         mLoginBtn           = (Button) findViewById(R.id.btn_login);
         mSingUpBtn          = (Button) findViewById(R.id.btn_signup);
         mResetPasswordBtn   = (Button) findViewById(R.id.btn_reset_password);
@@ -43,10 +43,11 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordEditText   = (EditText) findViewById(R.id.etPassword);
         mProgressBar        = (ProgressBar) findViewById(R.id.progressBar);
 
-        if (auth.getCurrentUser() != null) {
+        if (mFirebaseAuth.getCurrentUser() != null)
+        {
             Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
-            mIntent.putExtra(Constants.USER_NAME, auth.getCurrentUser().getDisplayName());
-            mIntent.putExtra(Constants.EMAIL, auth.getCurrentUser().getEmail());
+            mIntent.putExtra(Constants.USER_NAME, mFirebaseAuth.getCurrentUser().getDisplayName());
+            mIntent.putExtra(Constants.EMAIL, mFirebaseAuth.getCurrentUser().getEmail());
             startActivity(mIntent);
             finish();
         }
@@ -71,31 +72,39 @@ public class LoginActivity extends AppCompatActivity {
                 String email = mEmailEditText.getText().toString();
                 final String password = mPasswordEditText.getText().toString();
 
-                if (TextUtils.isEmpty(email)) {
-                    mEmailEditText.setError("Enter email address!");
+                if (TextUtils.isEmpty(email))
+                {
+                    mEmailEditText.setError(getString(R.string.err_msg_email));
                     return;
                 }
 
-                if (TextUtils.isEmpty(password)) {
-                    mPasswordEditText.setError("Enter password!");
+                if (TextUtils.isEmpty(password))
+                {
+                    mPasswordEditText.setError(getString(R.string.err_msg_passwd));
                     return;
                 }
                 mProgressBar.setVisibility(View.VISIBLE);
 
                 //authenticate user
-                auth.signInWithEmailAndPassword(email, password)
+                mFirebaseAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 mProgressBar.setVisibility(View.GONE);
-                                if (!task.isSuccessful()) {
+                                if (!task.isSuccessful())
+                                {
                                     // there was an error
-                                    if (password.length() < 6) {
-                                        mPasswordEditText.setError("Minimal length password is 6");
-                                    } else {
+                                    if (password.length() < 6)
+                                    {
+                                        mPasswordEditText.setError(getString(R.string.err_msg_length_passwd));
+                                    }
+                                    else
+                                    {
                                         Toast.makeText(LoginActivity.this, getString(R.string.str_register_fail), Toast.LENGTH_LONG).show();
                                     }
-                                } else {
+                                }
+                                else
+                                {
                                     Intent mIntent = new Intent(LoginActivity.this, MainActivity.class);
                                     mIntent.putExtra(Constants.EMAIL, mEmailEditText.getText().toString());
                                     startActivity(mIntent);

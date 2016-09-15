@@ -27,16 +27,15 @@ public class SignupActivity extends AppCompatActivity {
     private Button      mSignUpBtn;
     private Button      mResetPasswordBtn;
     private ProgressBar mProgressBar;
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mFirebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        //Get Firebase mAuth instance
-        mAuth = FirebaseAuth.getInstance();
-
+        //Get Firebase instance
+        mFirebaseAuth       = FirebaseAuth.getInstance();
         mLoginBtn           = (Button) findViewById(R.id.btn_login);
         mSignUpBtn          = (Button) findViewById(R.id.btn_signup);
         mResetPasswordBtn   = (Button) findViewById(R.id.btn_reset_password);
@@ -47,40 +46,46 @@ public class SignupActivity extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SignupActivity.this,LoginActivity.class));
+                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
             }
         });
 
         mSignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = mEmailEditText.getText().toString().trim();
+                String email    = mEmailEditText.getText().toString().trim();
                 String password = mPasswordEdithText.getText().toString().trim();
-                if(TextUtils.isEmpty(email)){
+                if (TextUtils.isEmpty(email))
+                {
                     mEmailEditText.requestFocus();
-                    mEmailEditText.setError("Enter email address");
+                    mEmailEditText.setError(getString(R.string.err_msg_email));
                     return;
                 }
-                if(TextUtils.isEmpty(password)){
-                    mPasswordEdithText.setError("Enter password");
+                if (TextUtils.isEmpty(password))
+                {
+                    mPasswordEdithText.setError(getString(R.string.err_msg_passwd));
                     mPasswordEdithText.requestFocus();
                     return;
-                }else if(password.length() < 6 ){
-                    mPasswordEdithText.setError("Password too short!");
+                }
+                else if (password.length() < 6)
+                {
+                    mPasswordEdithText.setError(getString(R.string.err_msg_length_passwd));
                     mPasswordEdithText.requestFocus();
                     return;
                 }
 
                 mProgressBar.setVisibility(View.VISIBLE);
                 //Creating the user
-
-                mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                mFirebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         mProgressBar.setVisibility(View.GONE);
-                        if(!task.isSuccessful()){
-                            Toast.makeText(getApplicationContext(), R.string.str_register_fail,Toast.LENGTH_SHORT).show();
-                        }else{
+                        if (!task.isSuccessful())
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.str_register_fail, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
                             Intent mIntent = new Intent(SignupActivity.this, MainActivity.class);
                             mIntent.putExtra(Constants.EMAIL, mEmailEditText.getText().toString());
                             startActivity(mIntent);

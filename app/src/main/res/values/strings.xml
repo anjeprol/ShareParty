@@ -22,4 +22,7 @@
     <string name="message_logout">Are you sure you want to sing out?</string>
     <string name="opt_no">no</string>
     <string name="opt_yes">si</string>
+    <string name="err_msg_email">Enter email address!</string>
+    <string name="err_msg_passwd">Enter password!</string>
+    <string name="err_msg_length_passwd">Minimal length password is 6</string>
 </resources>
