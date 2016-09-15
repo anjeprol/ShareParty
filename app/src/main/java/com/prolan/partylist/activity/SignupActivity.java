@@ -45,6 +45,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
         mLoginBtn.setOnClickListener(this);
         mSignUpBtn.setOnClickListener(this);
+        mResetPasswordBtn.setOnClickListener(this);
     }
 
     @Override
