@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Share Party</string>
-    <string name="title_activity_main">Party List</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -10,22 +9,27 @@
     <string name="tv_password">Password</string>
     <string name="et_email">Email</string>
     <string name="tv_user">User</string>
+
     <string name="lb_btn_register">Register</string>
     <string name="lb_forgot_password">Forgot password?</string>
     <string name="lb_reset_password">Reset password</string>
     <string name="lb_btn_login">I\'m already registered, Login Me!</string>
     <string name="lb_btn_login_short">Login</string>
+
     <string name="str_register_fail">Register Failed</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="user_name">No name to show</string>
     <string name="email_sample_com">email@sample.com</string>
     <string name="title_logout">Logout</string>
     <string name="message_logout">Are you sure you want to sing out?</string>
-    <string name="opt_no">no</string>
-    <string name="opt_yes">si</string>
+
+    <string name="opt_no">No</string>
+    <string name="opt_yes">Yes</string>
+
     <string name="err_msg_email">Enter email address!</string>
     <string name="err_msg_passwd">Enter password!</string>
     <string name="err_msg_length_passwd">Minimal length password is 6</string>
+
     <string name="msg_sync">Syncing...</string>
     <string name="btn_reset_password">Reset Password</string>
     <string name="btn_back">Back</string>

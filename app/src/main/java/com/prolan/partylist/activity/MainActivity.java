@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         snack.show();
     }
 
-    @Override
+/*    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START))
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         {
             super.onBackPressed();
         }
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -197,4 +197,10 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        logout();
+    }
+
 }
