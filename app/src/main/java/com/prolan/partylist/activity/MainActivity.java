@@ -1,7 +1,9 @@
 package com.prolan.partylist.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,20 +20,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.prolan.partylist.R;
+import com.prolan.partylist.utils.Behaviors;
 import com.prolan.partylist.utils.Constants;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private final static String ACTION = "Action";
-    private TextView mEmailTextView;
-    private TextView mUserNameTextView;
-    private Intent mIntent;
+    private String      FILE_NAME;
+    private TextView    mEmailTextView;
+    private ImageView   mEditNickNameImageView;
+    private ImageView   mDoneNickNameImageView;
+    private EditText    mUserNameTextView;
+    private Intent      mIntent;
     private FirebaseAuth mFirebaseAuth;
 
     @Override
@@ -44,12 +51,14 @@ public class MainActivity extends AppCompatActivity
         mIntent = getIntent();
 
         // Getting the views from nav_bar
-        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
-        View header = mNavigationView.getHeaderView(0);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
 
-        mEmailTextView = (TextView) header.findViewById(R.id.nav_tv_email);
-        mUserNameTextView = (TextView) header.findViewById(R.id.nav_tv_userName);
+        mEmailTextView          = (TextView) header.findViewById(R.id.nav_tv_email);
+        mEditNickNameImageView  = (ImageView) header.findViewById(R.id.lb_nickname);
+        mDoneNickNameImageView  = (ImageView) header.findViewById(R.id.lb_done);
+        mUserNameTextView       = (EditText) header.findViewById(R.id.nav_tv_userName);
 
         setUsrPreferences();
 
@@ -62,12 +71,18 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mEditNickNameImageView.setOnClickListener(this);
+        mDoneNickNameImageView.setOnClickListener(this);
+
     }
 
     //Method to read the information that the user filled when was authenticating
     private void setUsrPreferences() {
+        FILE_NAME = mEmailTextView.getText().toString();
+        //Reading the last phone number used
+        SharedPreferences prefs = getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        String nickName = prefs.getString(Constants.DATA, "");
+        mUserNameTextView.setText(nickName);
         if (!mIntent.getStringExtra(Constants.EMAIL).isEmpty())
         {
             mEmailTextView.setText(mIntent.getStringExtra(Constants.EMAIL));
@@ -197,7 +212,39 @@ public class MainActivity extends AppCompatActivity
             case R.id.fab:
                 showSnackBar(view);
                 break;
+            case R.id.lb_nickname:
+                editNickName();
+                break;
+            case R.id.lb_done:
+                done();
+                break;
         }
+    }
+
+    private void done() {
+        mUserNameTextView.setEnabled(false);
+        mEditNickNameImageView.setVisibility(View.VISIBLE);
+        mDoneNickNameImageView.setVisibility(View.GONE);
+    }
+
+    //Method to enable the done button and edith the nick
+    private void editNickName() {
+        mUserNameTextView.setEnabled(true);
+        mEditNickNameImageView.setVisibility(View.GONE);
+        mDoneNickNameImageView.setVisibility(View.VISIBLE);
+        Behaviors.showKeyboard(this);
+    }
+
+    @Override
+    protected void onStop() {
+
+        //Saving the last phone number used
+        SharedPreferences prefs = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        //Data is the key to retrieve the information
+        editor.putString(Constants.DATA, mUserNameTextView.getText().toString());
+        editor.commit();
+        super.onStop();
     }
 
     @Override

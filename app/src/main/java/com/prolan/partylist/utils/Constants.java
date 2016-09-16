@@ -8,4 +8,5 @@ public class Constants {
     public static final String EMAIL        = "email";
     public static final String NO_EMAIL     = "No Email";
     public static final String USER_NAME    = "userName";
+    public static final String DATA         = "data";
 }
