@@ -32,7 +32,6 @@ import com.prolan.partylist.utils.Constants;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private final static String ACTION = "Action";
     private String      FILE_NAME;
     private TextView    mEmailTextView;
     private ImageView   mEditNickNameImageView;
@@ -76,6 +75,47 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.fab:
+                Behaviors.showSnackBar(view,this,getString(R.string.msg_sync),
+                        Snackbar.LENGTH_LONG, R.color.colorPrimary);
+                break;
+            case R.id.lb_nickname:
+                editNickName();
+                break;
+            case R.id.lb_done:
+                done();
+                break;
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+
+        switch (item.getItemId())
+        {
+            case R.id.nav_camera:
+                break;
+            case R.id.nav_gallery:
+                break;
+            case R.id.nav_slideshow:
+                break;
+            case R.id.nav_manage:
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
+                break;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     //Method to read the information that the user filled when was authenticating
     private void setUsrPreferences() {
         FILE_NAME = mEmailTextView.getText().toString();
@@ -95,19 +135,6 @@ public class MainActivity extends AppCompatActivity
         {
             mUserNameTextView.setText(mIntent.getStringExtra(Constants.USER_NAME));
         }
-    }
-
-    //Method to show a custom snackbar
-    private void showSnackBar(View view) {
-        Snackbar snack = Snackbar.make(view, R.string.msg_sync, Snackbar.LENGTH_LONG).setAction(ACTION, null);
-        ViewGroup viewGroup = (ViewGroup) snack.getView();
-        TextView textView = (TextView) viewGroup.findViewById(android.support.design.R.id.snackbar_text);
-        viewGroup.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-        {
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        }
-        snack.show();
     }
 
 /*    @Override
@@ -177,47 +204,6 @@ public class MainActivity extends AppCompatActivity
             mFirebaseAuth.signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-
-        switch (item.getItemId())
-        {
-            case R.id.nav_camera:
-                break;
-            case R.id.nav_gallery:
-                break;
-            case R.id.nav_slideshow:
-                break;
-            case R.id.nav_manage:
-                break;
-            case R.id.nav_share:
-                break;
-            case R.id.nav_send:
-                break;
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId())
-        {
-            case R.id.fab:
-                showSnackBar(view);
-                break;
-            case R.id.lb_nickname:
-                editNickName();
-                break;
-            case R.id.lb_done:
-                done();
-                break;
         }
     }
 
