@@ -1,0 +1,10 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:background="#221da4"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.prolan.partylist.fragments.FriendsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+</FrameLayout>

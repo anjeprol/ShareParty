@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,20 +20,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.prolan.partylist.R;
+import com.prolan.partylist.fragments.FriendsFragment;
+import com.prolan.partylist.fragments.NotesFragment;
+import com.prolan.partylist.fragments.SettingsFragment;
 import com.prolan.partylist.utils.Behaviors;
 import com.prolan.partylist.utils.Constants;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private final static String ACTION = "Action";
     private String      FILE_NAME;
     private TextView    mEmailTextView;
     private ImageView   mEditNickNameImageView;
@@ -68,12 +70,77 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         mEditNickNameImageView.setOnClickListener(this);
         mDoneNickNameImageView.setOnClickListener(this);
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.fab:
+                Behaviors.showSnackBar(view,this,getString(R.string.msg_sync),
+                        Snackbar.LENGTH_LONG, R.color.colorPrimary);
+                break;
+            case R.id.lb_nickname:
+                editNickName();
+                break;
+            case R.id.lb_done:
+                done();
+                break;
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Handle navigation view item clicks here.
+        switch (item.getItemId())
+        {
+            case R.id.nav_notes:
+                loadNotes(fragmentTransaction);
+                break;
+            case R.id.nav_settings:
+                loadSettings(fragmentTransaction);
+                break;
+            case R.id.nav_friends:
+                loadFriends(fragmentTransaction);
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
+                break;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    //Method to load the friend fragment
+    private void loadFriends(FragmentTransaction fragmentTransaction) {
+        getTransaction(new FriendsFragment(),fragmentTransaction);
+    }
+
+    //Method to load the settings fragment
+    private void loadSettings(FragmentTransaction fragmentTransaction) {
+        getTransaction(new SettingsFragment(),fragmentTransaction);
+    }
+
+    //Method to load the notes fragment
+    private void loadNotes(FragmentTransaction fragmentTransaction) {
+        getTransaction(new NotesFragment(),fragmentTransaction);
+    }
+
+    //Method to add fragment transaction
+    private void getTransaction(Fragment fragment, FragmentTransaction fragmentTransaction){
+        fragmentTransaction.replace(R.id.fragment_container,fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     //Method to read the information that the user filled when was authenticating
@@ -95,19 +162,6 @@ public class MainActivity extends AppCompatActivity
         {
             mUserNameTextView.setText(mIntent.getStringExtra(Constants.USER_NAME));
         }
-    }
-
-    //Method to show a custom snackbar
-    private void showSnackBar(View view) {
-        Snackbar snack = Snackbar.make(view, R.string.msg_sync, Snackbar.LENGTH_LONG).setAction(ACTION, null);
-        ViewGroup viewGroup = (ViewGroup) snack.getView();
-        TextView textView = (TextView) viewGroup.findViewById(android.support.design.R.id.snackbar_text);
-        viewGroup.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-        {
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        }
-        snack.show();
     }
 
 /*    @Override
@@ -180,58 +234,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-
-        switch (item.getItemId())
-        {
-            case R.id.nav_camera:
-                break;
-            case R.id.nav_gallery:
-                break;
-            case R.id.nav_slideshow:
-                break;
-            case R.id.nav_manage:
-                break;
-            case R.id.nav_share:
-                break;
-            case R.id.nav_send:
-                break;
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId())
-        {
-            case R.id.fab:
-                showSnackBar(view);
-                break;
-            case R.id.lb_nickname:
-                editNickName();
-                break;
-            case R.id.lb_done:
-                done();
-                break;
-        }
-    }
-
+    //Method to disable the change on nickname
     private void done() {
-        mUserNameTextView.setEnabled(false);
-        mEditNickNameImageView.setVisibility(View.VISIBLE);
-        mDoneNickNameImageView.setVisibility(View.GONE);
+        Behaviors.setVisibility(mEditNickNameImageView,mDoneNickNameImageView,
+                mUserNameTextView,false);
     }
 
     //Method to enable the done button and edith the nick
     private void editNickName() {
-        mUserNameTextView.setEnabled(true);
-        mEditNickNameImageView.setVisibility(View.GONE);
-        mDoneNickNameImageView.setVisibility(View.VISIBLE);
+        Behaviors.setVisibility(mDoneNickNameImageView,mEditNickNameImageView
+                ,mUserNameTextView,true);
         Behaviors.showKeyboard(this);
     }
 
