@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,6 +26,9 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.prolan.partylist.R;
+import com.prolan.partylist.fragments.FriendsFragment;
+import com.prolan.partylist.fragments.NotesFragment;
+import com.prolan.partylist.fragments.SettingsFragment;
 import com.prolan.partylist.utils.Behaviors;
 import com.prolan.partylist.utils.Constants;
 
@@ -91,13 +97,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         // Handle navigation view item clicks here.
-
         switch (item.getItemId())
         {
+            case R.id.nav_notes:
+                loadNotes(fragmentTransaction);
+                break;
             case R.id.nav_settings:
+                loadSettings(fragmentTransaction);
                 break;
             case R.id.nav_friends:
+                loadFriends(fragmentTransaction);
                 break;
             case R.id.nav_share:
                 break;
@@ -107,6 +119,28 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    //Method to load the friend fragment
+    private void loadFriends(FragmentTransaction fragmentTransaction) {
+        getTransaction(new FriendsFragment(),fragmentTransaction);
+    }
+
+    //Method to load the settings fragment
+    private void loadSettings(FragmentTransaction fragmentTransaction) {
+        getTransaction(new SettingsFragment(),fragmentTransaction);
+    }
+
+    //Method to load the notes fragment
+    private void loadNotes(FragmentTransaction fragmentTransaction) {
+        getTransaction(new NotesFragment(),fragmentTransaction);
+    }
+
+    //Method to add fragment transaction
+    private void getTransaction(Fragment fragment, FragmentTransaction fragmentTransaction){
+        fragmentTransaction.replace(R.id.fragment_container,fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     //Method to read the information that the user filled when was authenticating
