@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -67,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         mEditNickNameImageView.setOnClickListener(this);
@@ -98,13 +95,9 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId())
         {
-            case R.id.nav_camera:
+            case R.id.nav_settings:
                 break;
-            case R.id.nav_gallery:
-                break;
-            case R.id.nav_slideshow:
-                break;
-            case R.id.nav_manage:
+            case R.id.nav_friends:
                 break;
             case R.id.nav_share:
                 break;
@@ -207,17 +200,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //Method to disable the change on nickname
     private void done() {
-        mUserNameTextView.setEnabled(false);
-        mEditNickNameImageView.setVisibility(View.VISIBLE);
-        mDoneNickNameImageView.setVisibility(View.GONE);
+        Behaviors.setVisibility(mEditNickNameImageView,mDoneNickNameImageView,
+                mUserNameTextView,false);
     }
 
     //Method to enable the done button and edith the nick
     private void editNickName() {
-        mUserNameTextView.setEnabled(true);
-        mEditNickNameImageView.setVisibility(View.GONE);
-        mDoneNickNameImageView.setVisibility(View.VISIBLE);
+        Behaviors.setVisibility(mDoneNickNameImageView,mEditNickNameImageView
+                ,mUserNameTextView,true);
         Behaviors.showKeyboard(this);
     }
 

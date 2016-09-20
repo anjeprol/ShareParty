@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.prolan.partylist.R;
@@ -57,5 +58,11 @@ public abstract class Behaviors {
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
         snack.show();
+    }
+
+    public static void setVisibility(ImageView visibleImageView, ImageView hideImageView, TextView usrTextView, boolean status){
+        usrTextView.setEnabled(status);
+        visibleImageView.setVisibility(View.VISIBLE);
+        hideImageView.setVisibility(View.GONE);
     }
 }

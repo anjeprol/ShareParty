@@ -9,4 +9,5 @@
     <dimen name="logo_w_h">100dp</dimen>
 
     <dimen name="arrow_size">18dp</dimen>
+    <dimen name="dimm_profile">60dp</dimen>
 </resources>
