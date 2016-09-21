@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.prolan.partylist.R;
 import com.prolan.partylist.fragments.FriendsFragment;
 import com.prolan.partylist.fragments.NotesFragment;
@@ -41,7 +43,7 @@ import com.prolan.partylist.utils.Behaviors;
 import com.prolan.partylist.utils.Constants;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ChildEventListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ChildEventListener, AdapterView.OnItemClickListener {
 
     private String              FILE_NAME;
     private TextView            mEmailTextView;
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
 
         mEditNickNameImageView.setOnClickListener(this);
         mDoneNickNameImageView.setOnClickListener(this);
@@ -330,5 +333,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCancelled(DatabaseError databaseError) {
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        mDatabase.child("users").child(mUserId).child("items")
+                .orderByChild("title")
+                .equalTo((String) mListView.getItemAtPosition(position))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChildren()) {
+                            DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
+                            firstChild.getRef().removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 }
