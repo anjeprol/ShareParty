@@ -20,11 +20,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.prolan.partylist.R;
 import com.prolan.partylist.fragments.FriendsFragment;
 import com.prolan.partylist.fragments.NotesFragment;
@@ -33,15 +41,21 @@ import com.prolan.partylist.utils.Behaviors;
 import com.prolan.partylist.utils.Constants;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ChildEventListener {
 
-    private String      FILE_NAME;
-    private TextView    mEmailTextView;
-    private ImageView   mEditNickNameImageView;
-    private ImageView   mDoneNickNameImageView;
-    private EditText    mUserNameTextView;
-    private Intent      mIntent;
-    private FirebaseAuth mFirebaseAuth;
+    private String              FILE_NAME;
+    private TextView            mEmailTextView;
+    private ImageView           mEditNickNameImageView;
+    private ImageView           mDoneNickNameImageView;
+    private EditText            mUserNameTextView;
+    private EditText            mItemEditText;
+    private Button              mAdButton;
+    private Intent              mIntent;
+    private FirebaseAuth        mFirebaseAuth;
+    private DatabaseReference   mDatabase;
+    private String              mUserId;
+    private ListView            mListView;
+    private ArrayAdapter<String>        mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +64,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mIntent = getIntent();
+        mIntent         = getIntent();
+        mFirebaseAuth   = FirebaseAuth.getInstance();
+        mDatabase       = FirebaseDatabase.getInstance().getReference();
+        mUserId         = mFirebaseAuth.getCurrentUser().getUid();
 
         // Getting the views from nav_bar
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -61,6 +78,11 @@ public class MainActivity extends AppCompatActivity
         mEditNickNameImageView  = (ImageView) header.findViewById(R.id.lb_nickname);
         mDoneNickNameImageView  = (ImageView) header.findViewById(R.id.lb_done);
         mUserNameTextView       = (EditText) header.findViewById(R.id.nav_tv_userName);
+        mItemEditText           = (EditText) findViewById(R.id.todoText);
+        mAdButton               = (Button) findViewById(R.id.addButton);
+
+        mListView = (ListView) findViewById(R.id.listView);
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
 
         setUsrPreferences();
 
@@ -73,8 +95,16 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        mListView.setAdapter(mAdapter);
+
         mEditNickNameImageView.setOnClickListener(this);
         mDoneNickNameImageView.setOnClickListener(this);
+        mAdButton.setOnClickListener(this);
+        // Use Firebase to populate the list.
+        mDatabase.child("users")
+                .child(mUserId)
+                .child("items")
+                .addChildEventListener(this);
 
     }
 
@@ -92,7 +122,20 @@ public class MainActivity extends AppCompatActivity
             case R.id.lb_done:
                 done();
                 break;
+            case R.id.addButton:
+                addTitle();
+                break;
         }
+    }
+
+    private void addTitle() {
+        mDatabase.child("users")
+                    .child(mUserId)
+                    .child("items")
+                    .push()
+                    .child("title")
+                    .setValue(mItemEditText.getText().toString());
+        mItemEditText.setText("");
     }
 
     @Override
@@ -225,7 +268,7 @@ public class MainActivity extends AppCompatActivity
 
     //Method to sing out from firebase
     private void singOut() {
-        mFirebaseAuth = FirebaseAuth.getInstance();
+
         if (mFirebaseAuth.getCurrentUser() != null)
         {
             mFirebaseAuth.signOut();
@@ -264,4 +307,28 @@ public class MainActivity extends AppCompatActivity
         logout();
     }
 
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        mAdapter.add((String) dataSnapshot.child("title").getValue());
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+        mAdapter.remove((String) dataSnapshot.child("title").getValue());
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
 }
