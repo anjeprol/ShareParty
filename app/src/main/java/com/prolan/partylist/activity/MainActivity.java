@@ -336,7 +336,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
+    {
         mDatabase.child("users").child(mUserId).child("items")
                 .orderByChild("title")
                 .equalTo((String) mListView.getItemAtPosition(position))
