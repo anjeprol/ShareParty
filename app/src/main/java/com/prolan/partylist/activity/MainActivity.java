@@ -20,6 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference   mDatabase;
     private String              mUserId;
     private ListView            mListView;
+    private FloatingActionButton        mFab;
+    private Animation                   mFabRotClockWise;
     private ArrayAdapter<String>        mAdapter;
 
     @Override
@@ -88,8 +92,11 @@ public class MainActivity extends AppCompatActivity
 
         setUsrPreferences();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
+        // customizing the animations and fab button
+        mFab                    = (FloatingActionButton) findViewById(R.id.fab_sync);
+        mFabRotClockWise        = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
+        mFab.setOnClickListener(this);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -115,9 +122,8 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId())
         {
-            case R.id.fab:
-                Behaviors.showSnackBar(view,this,getString(R.string.msg_sync),
-                        Snackbar.LENGTH_LONG, R.color.colorPrimary);
+            case R.id.fab_sync:
+                syncData(view);
                 break;
             case R.id.lb_nickname:
                 editNickName();
@@ -129,6 +135,12 @@ public class MainActivity extends AppCompatActivity
                 addTitle();
                 break;
         }
+    }
+
+    private void syncData(View view){
+        mFab.startAnimation(mFabRotClockWise);
+        //Behaviors.showSnackBar(view,this,getString(R.string.msg_sync),
+          //      Snackbar.LENGTH_LONG, R.color.colorPrimary);
     }
 
     private void addTitle() {
